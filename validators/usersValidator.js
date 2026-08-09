@@ -1,4 +1,4 @@
-const { body } = require("express-validator");
+const { body, param } = require("express-validator");
 
 const createUserValidator = [
   body("isim")
@@ -18,6 +18,12 @@ const createUserValidator = [
     .toInt(),
 ];
 const updateUserValidator = createUserValidator;
+const userIdValidator = [
+  param("id")
+    .isInt({ min: 1 })
+    .withMessage("ID pozitif bir tam sayı olmalıdır")
+    .toInt(),
+];
   const patchUserValidator = [
   body("isim")
     .optional()
@@ -31,9 +37,9 @@ const updateUserValidator = createUserValidator;
     .withMessage("Yaş 1 ile 120 arasında tam sayı olmalıdır")
     .toInt(),
 ];
-
- module.exports = {
+module.exports = {
   createUserValidator,
   updateUserValidator,
   patchUserValidator,
+  userIdValidator,
 };

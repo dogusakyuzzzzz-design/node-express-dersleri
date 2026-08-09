@@ -13,10 +13,16 @@ const {
   createUserValidator,
   updateUserValidator,
   patchUserValidator,
+  userIdValidator,
 } = require("../validators/usersValidator");
 const validateRequest = require("../middlewares/validateRequest");
 router.get("/", getAllUsers);
-router.get("/:id", getUserById);
+router.get(
+  "/:id",
+  userIdValidator,
+  validateRequest,
+  getUserById
+);
 router.post(
   "/",
   createUserValidator,
@@ -25,16 +31,22 @@ router.post(
 );
 router.put(
   "/:id",
+userIdValidator,
 updateUserValidator,
   validateRequest,
   updateUser
 );
 router.patch(
   "/:id",
+  userIdValidator,
   patchUserValidator,
   validateRequest,
   patchUser
 );
-router.delete("/:id", deleteUser);
-
+router.delete(
+  "/:id",
+  userIdValidator,
+  validateRequest,
+  deleteUser
+);
 module.exports = router;
