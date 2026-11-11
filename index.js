@@ -15,7 +15,12 @@ app.get("/", (req, res) => {
 
 app.use("/users", usersRouter);
 app.use(notFound);
-app.use(errorHandler); 
-app.listen(PORT, () => {
-  console.log("Sunucu çalışıyor: http://localhost:" + PORT);
-});
+app.use(errorHandler);
+
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log("Sunucu çalışıyor: http://localhost:" + PORT);
+  });
+}
+
+module.exports = app;
