@@ -1,9 +1,13 @@
-const users = [
-  { id: 1, isim: "Ahmet", yas: 25 },
-  { id: 2, isim: "Mehmet", yas: 30 },
-  { id: 3, isim: "Ayşe", yas: 28 }
-];
+const fs = require("fs");
+const path = require("path");
 
+const usersFilePath = path.join(__dirname, "../data/users.json");
+
+let users = JSON.parse(fs.readFileSync(usersFilePath, "utf8"));
+
+const saveUsers = () => {
+  fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2));
+};
 const getAllUsers = (req, res) => {
   res.json(users);
 };
@@ -32,15 +36,18 @@ const createUser = (req, res) => {
       hata: "İsim ve yaş zorunludur"
     });
   }
-
+const yeniId =
+  users.length === 0
+    ? 1
+    : Math.max(...users.map((kullanici) => kullanici.id)) + 1;
   const yeniKullanici = {
-    id: users.length + 1,
+id: yeniId,
     isim: isim,
     yas: Number(yas)
   };
 
   users.push(yeniKullanici);
-
+saveUsers();
   res.status(201).json(yeniKullanici);
 };
 
@@ -67,6 +74,7 @@ const updateUser = (req, res) => {
   user.isim = isim;
   user.yas = Number(yas);
 
+  saveUsers();
   res.json(user);
 };
 
@@ -98,6 +106,7 @@ const patchUser = (req, res) => {
     user.yas = Number(yas);
   }
 
+  saveUsers();
   res.json(user);
 };
 
@@ -116,6 +125,7 @@ const deleteUser = (req, res) => {
 
   const silinenKullanici = users.splice(userIndex, 1);
 
+  saveUsers();
   res.json({
     mesaj: "Kullanıcı silindi",
     kullanici: silinenKullanici[0]
